@@ -19,10 +19,9 @@ def build_ry_gate(angle: float) -> NDArray:
     """
 
     ### À compléter
-    theta = angle
     ry_gate = np.array([
-        [np.cos(theta / 2), -np.sin(theta / 2)],
-        [np.sin(theta / 2),  np.cos(theta / 2)]
+        [np.cos(angle / 2), -np.sin(angle / 2)],
+        [np.sin(angle / 2),  np.cos(angle / 2)]
     ])
     ###
 
@@ -41,7 +40,21 @@ def control(gate: NDArray) -> NDArray:
     """
 
     ### À compléter
-    control_gate = None
+    # Number of qubits the gate acts on
+    k = int(np.log2(gate.shape[0]))
+
+    # Projectors on the control qubit (qubit 0)
+    P0 = np.array([[1, 0],
+                   [0, 0]])   # |0><0|
+    P1 = np.array([[0, 0],
+                   [0, 1]])   # |1><1|
+
+    # Identity on the k target qubits
+    I_k = np.eye(2**k)
+
+    # Controlled gate formula:
+    # C(P) = |0><0| ⊗ I + |1><1| ⊗ P
+    control_gate = np.kron(I_k, P0) + np.kron(gate, P1)
     ###
 
     return control_gate
@@ -117,7 +130,10 @@ def compose_gates(gates: tuple[NDArray]) -> NDArray:
     """
 
     ### À compléter
-    composition_gate = None
+    # First gate in the composition is the last one applied
+    composition_gate = np.eye(2**int(np.log2(gates[0].shape[0])))
+    for gate in reversed(gates):
+        composition_gate = gate @ composition_gate
     ###
 
     return composition_gate
