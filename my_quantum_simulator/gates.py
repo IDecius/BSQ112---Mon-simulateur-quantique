@@ -19,7 +19,11 @@ def build_ry_gate(angle: float) -> NDArray:
     """
 
     ### À compléter
-    ry_gate = None
+    theta = angle
+    ry_gate = np.array([
+        [np.cos(theta / 2), -np.sin(theta / 2)],
+        [np.sin(theta / 2),  np.cos(theta / 2)]
+    ])
     ###
 
     return ry_gate
