@@ -87,7 +87,10 @@ def reorder_qubits_gate(gate: NDArray, order: list[int]) -> NDArray:
     tensor_shape = (2,) * number_of_qubits
 
     ### À compléter
-    basis_reorder = None
+    # basis_reorder = basis_order.reshape(tensor_shape).transpose(to_dim_index).flatten()
+    tensor = basis_order.reshape(tensor_shape)
+    basis_reorder = np.moveaxis(tensor, list(from_dim_index), list(to_dim_index)).flatten()                    # remet le tenseur permuté à plat pour obtenir l’ordre final
+
     ###
     reordered_gate = gate[basis_reorder, :][:, basis_reorder]
 
@@ -112,7 +115,13 @@ def convert_to_more_qubits(gate: NDArray, number_of_qubits: int, apply_on_qubits
     assert number_of_qubits > gate_number_of_qubits
 
     ### À compléter
-    new_gate = None
+    k = gate_number_of_qubits
+    # La porte agit d'abord sur q0..q_{k-1} (petit-boutisme : q0 est à droite)
+    padded = np.kron(np.eye(2 ** (number_of_qubits - k)), gate)
+    # order[q] = nouvelle position du qubit q
+    rest = [q for q in range(number_of_qubits) if q not in apply_on_qubits]
+    order = list(apply_on_qubits) + rest
+    new_gate = reorder_qubits_gate(padded, order)
     ###
 
     return new_gate

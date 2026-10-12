@@ -14,7 +14,7 @@ def prepare_init_state(number_of_qubits: int) -> NDArray:
     """
 
     ### À compléter
-    init_state = None
+    init_state = np.array([1] + [0] * (2**number_of_qubits - 1), dtype=complex)
     ###
 
     return init_state
@@ -25,7 +25,7 @@ def apply_gate_on_state(gate: NDArray, state: NDArray) -> NDArray:
     Apply gate to a state and return the resulting state.
 
     Args:
-        gate (NDArray): A gate or a circuit as a matric
+        gate (NDArray): A gate or a circuit as a matrix
         state (NDArray): A state as a vector
 
     Returns:
@@ -33,7 +33,7 @@ def apply_gate_on_state(gate: NDArray, state: NDArray) -> NDArray:
     """
 
     ### À compléter
-    final_state = None
+    final_state = gate @ state
     ###
 
     return final_state
